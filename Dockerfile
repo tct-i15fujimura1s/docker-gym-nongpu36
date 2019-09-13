@@ -3,10 +3,11 @@ FROM jnishii/docker-gym-nongpu
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN sudo python3 -m pip install --upgrade pip
-RUN python3 -m pip install nbgrader
-RUN jupyter nbextension install --system --py nbgrader --overwrite
-RUN jupyter nbextension enable --system --py nbgrader
-RUN jupyter serverextension enable --system --py nbgrader
+RUN sudo python3 -m pip install nbgrader
+RUN sudo python3 -m pip install nose
+RUN sudo jupyter nbextension install --system --py nbgrader --overwrite
+RUN sudo jupyter nbextension enable --system --py nbgrader
+RUN sudo jupyter serverextension enable --system --py nbgrader
 
 ENV DEBIAN_FRONTEND teletype
 
