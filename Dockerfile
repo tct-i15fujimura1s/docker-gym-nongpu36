@@ -9,6 +9,9 @@ RUN sudo jupyter nbextension install --system --py nbgrader --overwrite
 RUN sudo jupyter nbextension enable --system --py nbgrader
 RUN sudo jupyter serverextension enable --system --py nbgrader
 
+# https://github.com/jhamrick/plotchecker
+RUN sudo python3 -m pip install plotchecker
+
 ENV DEBIAN_FRONTEND teletype
 
 
