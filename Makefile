@@ -1,13 +1,25 @@
-IMAGE=jnishii/docker-gym-nongpu-nbgrader
+IMAGE=jnishii/docker-gym-nongpu2
+VERSION=$(shell cat VERSION)
+
+release: 
+	echo "$VERSION"
+	git add .
+	git commit -m "version ${VERSION}"
+	git tag -a "${VERSION}" -m "version ${VERSION}"
+	git push
+	git push --tags
+#	docker tag ${IMAGE}:latest ${IMAGE}:${VERSION}
+#	docker push ${IMAGE}:latest
+#	docker push ${IMAGE}:$version
 
 build:
-	docker build --force-rm=true -t ${IMAGE} .
+	docker build --force-rm=true -t ${IMAGE}:latest .
 
 run:
 	bin/run.sh
 
 save:
-	docker save jnishii/docker-gym-nongpu-nbgrader -o gymbox.tar
+	docker save jnishii/docker-gym-nongpu -o gymbox.tar
 
 load:
 	docker load -i gymbox.tar
