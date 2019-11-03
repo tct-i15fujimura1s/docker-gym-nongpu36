@@ -44,7 +44,6 @@ RUN sudo update-alternatives --config python
 # upgrade pip
 RUN python -m pip install --upgrade pip setuptools
 
-
 # Step 1: basic python packages
 COPY requirements_py.txt /tmp/
 RUN python -m pip install -r /tmp/requirements_py.txt
@@ -66,6 +65,13 @@ RUN cat /tmp/env_register.txt >> ${GYMDIR}/__init__.py
 COPY gridworld-gym/envs/mdp_gridworld.py ${GYMDIR}/toy_text/
 RUN  echo "from gym.envs.toy_text.mdp_gridworld import MDPGridworldEnv" >> ${GYMDIR}/toy_text/__init__.py
 
+# install gym-maze
+RUN mkdir /tmp/gym-maze
+COPY gym-maze /tmp/gym-maze
+RUN cd /tmp/gym-maze && python setup.py install
+
+# Step 4: install misc packages
+RUN python -m pip install dfply
 
 # Install graphic driver
 RUN apt-get install -y libgl1-mesa-dri libglx0 libgl1 --no-install-recommends
@@ -86,15 +92,14 @@ COPY jupyter.sh /usr/bin
 COPY aliases.sh /etc/profile.d
 
 # install nbgrader
-RUN sudo python -m pip install --upgrade pip
-RUN sudo python -m pip install nbgrader
-RUN sudo python -m pip install nose
-RUN sudo jupyter nbextension install --sys-prefix --py nbgrader --overwrite
-RUN sudo jupyter nbextension disable --sys-prefix --py nbgrader
-RUN sudo jupyter serverextension disable --sys-prefix --py nbgrader
-
+RUN python -m pip install --upgrade pip
+RUN python -m pip install nbgrader
+RUN python -m pip install nose
+RUN jupyter nbextension install --sys-prefix --py nbgrader --overwrite
+RUN jupyter nbextension disable --sys-prefix --py nbgrader
+RUN jupyter serverextension disable --sys-prefix --py nbgrader
 # https://github.com/jhamrick/plotchecker
-RUN sudo python3 -m pip install plotchecker
+RUN python3 -m pip install plotchecker
 
 # Customize jupyter extensions
 RUN python -m pip install jupyter-emacskeys
@@ -111,7 +116,7 @@ RUN jupyter nbextension enable hide_header/main --sys-prefix
 RUN jupyter nbextension enable toc2/main --sys-prefix
 RUN python -m pip install black
 RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --sys-prefix
-RUN jupyter nbextension enable jupyter-black-master/jupyter-black
+RUN jupyter nbextension enable jupyter-black-master/jupyter-black --sys-prefix
 
 ENV DEBIAN_FRONTEND teletype
 

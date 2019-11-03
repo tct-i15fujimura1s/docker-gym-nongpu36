@@ -1,4 +1,4 @@
-IMAGE=jnishii/docker-gym-nongpu2
+IMAGE=jnishii/docker-gym-nongpu36
 VERSION=$(shell cat VERSION)
 
 release: 
