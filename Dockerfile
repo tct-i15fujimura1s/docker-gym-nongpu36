@@ -31,6 +31,7 @@ RUN apt-get update \
         python3-dev  \
         python3-distutils \
         python3-pip  \
+        ffmpeg \
         libopenblas-base  \
 #        cython3  \
      && apt-get upgrade -y \
