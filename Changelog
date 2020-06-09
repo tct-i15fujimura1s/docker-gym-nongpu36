@@ -1,2 +1,5 @@
 1.0 (2019/12/22)
 - fix bug of gridworld
+
+1.0.1 (2020/4/9)
+- rebuild for jupyter update

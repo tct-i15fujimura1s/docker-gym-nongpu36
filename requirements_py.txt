@@ -8,6 +8,7 @@ seaborn
 pyvirtualdisplay
 
 # Jupyter
+jupyter_client
 jupyter
 jupyterlab
 jupyter_nbextensions_configurator
