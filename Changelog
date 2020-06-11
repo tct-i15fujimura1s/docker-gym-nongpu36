@@ -1,5 +1,9 @@
-1.0 (2019/12/22)
-- fix bug of gridworld
+1.0.2(2020/6/11)
+- rebuild with jupyter_client==5.3.1 to avoid kernel error on Windows 10
 
 1.0.1 (2020/4/9)
 - rebuild for jupyter update
+
+1.0 (2019/12/22)
+- fix bug of gridworld
+
