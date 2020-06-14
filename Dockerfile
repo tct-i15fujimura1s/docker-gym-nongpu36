@@ -121,13 +121,13 @@ RUN jupyter nbextension enable jupyter-black-master/jupyter-black --sys-prefix
 
 ENV DEBIAN_FRONTEND teletype
 
+ENV JUPYTER_ALLOW_INSECURE_WRITES=true
+
 # X
 ENV DISPLAY :0.0
 VOLUME /tmp/.X11-unix
 VOLUME ${HOME}
 USER ${USER}
-
-ENV JUPYTER_ALLOW_INSECURE_WRITES=true
 
 #CMD [ "/bin/bash" ]
 
