@@ -127,6 +127,8 @@ VOLUME /tmp/.X11-unix
 VOLUME ${HOME}
 USER ${USER}
 
+ENV JUPYTER_ALLOW_INSECURE_WRITES=true
+
 #CMD [ "/bin/bash" ]
 
 # Jupyter notebook with virtual frame buffer
