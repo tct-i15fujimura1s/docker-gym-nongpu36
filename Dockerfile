@@ -78,19 +78,29 @@ RUN python -m pip install dfply
 RUN apt-get install -y libgl1-mesa-dri libglx0 libgl1 --no-install-recommends
 RUN dbus-uuidgen > /etc/machine-id
 
+# Install some scripts
+COPY scripts/fix-permissions /usr/local/bin
+RUN chmod a+rx /usr/local/bin/fix-permissions
+
 # create user account
-ENV USER jovyan
-ENV HOME /home/${USER}
-RUN export uid=1000 gid=1000 &&\
-    echo "${USER}:x:${uid}:${gid}:Developer,,,:${HOME}:/bin/bash" >> /etc/passwd &&\
-    echo "${USER}:x:${uid}:" >> /etc/group &&\
-    echo "${USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers &&\
-    install -d -m 0755 -o ${uid} -g ${gid} ${HOME}
+ARG NB_USER="jovyan"
+ARG NB_UID="1000"
+ARG NB_GID="100"
+
+ENV SHELL=/bin/bash \
+    NB_USER=$NB_USER \
+    NB_UID=$NB_UID \
+    NB_GID=$NB_GID \
+	HOME=/home/${NB_USER}
+
+RUN export uid=${NB_UID} gid=${NB_GID} && \
+    echo "${NB_USER}:x:${NB_UID}:${NB_GID}:Developer,,,:${HOME}:/bin/bash" >> /etc/passwd && \
+    echo "${NB_USER}:x:${NB_UID}:" >> /etc/group && \
+    echo "${NB_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    install -d -m 0755 -o ${NB_UID} -g ${NB_GID} ${HOME} && \
+    fix-permissions ${HOME}
 WORKDIR ${HOME}
 
-# Install some scripts
-COPY jupyter.sh /usr/bin
-COPY aliases.sh /etc/profile.d
 
 # install nbgrader
 RUN python -m pip install --upgrade pip
@@ -119,15 +129,24 @@ RUN python -m pip install black
 RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --sys-prefix
 RUN jupyter nbextension enable jupyter-black-master/jupyter-black --sys-prefix
 
-ENV DEBIAN_FRONTEND teletype
+RUN fix-permissions ${HOME}
 
+ENV DEBIAN_FRONTEND teletype
 ENV JUPYTER_ALLOW_INSECURE_WRITES=true
+
+# Install some scripts
+COPY scripts/jupyter.sh /usr/local/bin
+COPY scripts/enable-formgrader /usr/local/bin
+COPY scripts/aliases.sh /etc/profile.d
+RUN chmod a+rx /usr/local/bin/jupyter.sh
+RUN chmod a+rx /usr/local/bin/enable-formgrader
 
 # X
 ENV DISPLAY :0.0
 VOLUME /tmp/.X11-unix
 VOLUME ${HOME}
-USER ${USER}
+USER ${NB_USER}
+RUN fix-permissions ${HOME}
 
 #CMD [ "/bin/bash" ]
 
@@ -136,6 +155,3 @@ CMD cd ${HOME} \
     && xvfb-run -s "-screen 0 1024x768x24" \
     /usr/local/bin/jupyter notebook \
     --port=8888 --ip=0.0.0.0 --allow-root 
-
-
-
