@@ -1,3 +1,8 @@
+1.0.5 (2020/6/21)
+- now use tini
+- call jupyter.sh from CMD
+- brush up entire Dockerfile
+
 1.0.4 (2020/6/16)
 - import fix-permissions from jupyter/docker-stacks
 - put scripts under /usr/local/bin
